@@ -5,7 +5,7 @@ services:
     image: golang:1.18.4
     container_name: curd-fiber-app
     ports:
-      - 3005:3000
+      - 3005:3005
     environment:
       TZ: Asia/Tehran
     working_dir: /app
