@@ -1,12 +1,15 @@
-# crud-fiber
+# CURD Fiber
 
-### run
+### Requirements
+- docker
 
-`docker-compose up`
+### Run
+
+`docker-compose up -d`
 
 
-### endpoint
-- http://127.0.0.1:3005/
+### Swagger
+- http://127.0.0.1:3005/swagger/index.html#/
 
 
 ### LICENSE
