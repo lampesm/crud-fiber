@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/gofiber/fiber/v2"
 	swagger "github.com/arsmn/fiber-swagger/v2"
+	"github.com/gofiber/fiber/v2"
 
+	"github.com/lampesm/crud-fiber/db"
 	_ "github.com/lampesm/crud-fiber/docs"
+	"github.com/lampesm/crud-fiber/serializers"
 )
 
 // @title CRUD Fiber
@@ -23,14 +25,10 @@ func main() {
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
 	app.Get("/accounts/:id", ShowAccount)
-
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World 👋!")
-	})
+	app.Post("/user/create", ShowAccount)
 
 	app.Listen(":3005")
 }
-
 
 // ShowAccount godoc
 // @Summary Show a account
@@ -57,4 +55,8 @@ type Account struct {
 type HTTPError struct {
 	status  string
 	message string
+}
+
+func CreateUser(c *fiber.Ctx) error {
+	//payload := new(serializers.RegisterRequest)
 }

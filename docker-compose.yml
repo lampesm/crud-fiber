@@ -3,10 +3,10 @@ version: '3.8'
 services:
   db:
     image: postgres:14.5
-    container_name: curd-fiber-db
+    container_name: ${POSTGRES_HOST}
     restart: always
     ports:
-      - "54320:5432"
+      - "54320:${POSTGRES_PORT}"
     environment:
       TZ: Asia/Tehran
       POSTGRES_USER: ${POSTGRES_USER}
