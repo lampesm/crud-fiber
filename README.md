@@ -1,7 +1,10 @@
 # CURD Fiber
 
+[Fiber](https://github.com/gofiber/fiber) is a fast and powerful web framework. In this project you will learn how to perform **CURD** operations on Postgres
+
 ## Requirements
 - docker
+- docker-compose
 
 ## Use
 
