@@ -1,6 +1,31 @@
 version: '3.8'
 
 services:
+  db:
+    image: postgres:14.5
+    container_name: curd-fiber-db
+    restart: always
+    ports:
+      - "54320:5432"
+    environment:
+      TZ: Asia/Tehran
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./volume/curd-fiber-data:/var/lib/postgresql/data
+    
+  adminer:
+    image: adminer:4.8.1
+    container_name: curd-fiber-adminer
+    restart: always
+    environment:
+      TZ: Asia/Tehran
+    ports:
+      - 8084:8080
+    depends_on:
+      - db
+
   app:
     image: golang:1.18.4
     container_name: curd-fiber-app
@@ -12,4 +37,10 @@ services:
     volumes:
       - ./:/app
     command: /app/docker/command.sh
+    depends_on:
+      - db
+
+networks:
+  deafult: 
+    name: curd-fiber-ntw
   
