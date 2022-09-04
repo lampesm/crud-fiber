@@ -48,33 +48,61 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/main.Account"
+                            "$ref": "#/definitions/handlers.Account"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/main.HTTPError"
+                            "$ref": "#/definitions/handlers.HTTPError"
                         }
                     },
                     "404": {
                         "description": "Not Found",
                         "schema": {
-                            "$ref": "#/definitions/main.HTTPError"
+                            "$ref": "#/definitions/handlers.HTTPError"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/main.HTTPError"
+                            "$ref": "#/definitions/handlers.HTTPError"
                         }
+                    }
+                }
+            }
+        },
+        "/user/create": {
+            "post": {
+                "description": "create a account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "create a account",
+                "parameters": [
+                    {
+                        "description": "User",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/serializers.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
                     }
                 }
             }
         }
     },
     "definitions": {
-        "main.Account": {
+        "handlers.Account": {
             "type": "object",
             "properties": {
                 "id": {
@@ -82,8 +110,30 @@ const docTemplate = `{
                 }
             }
         },
-        "main.HTTPError": {
+        "handlers.HTTPError": {
             "type": "object"
+        },
+        "serializers.User": {
+            "type": "object",
+            "required": [
+                "email",
+                "password",
+                "username"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 4
+                },
+                "username": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 1
+                }
+            }
         }
     }
 }`
@@ -91,7 +141,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "127.0.0.1:3005",
+	Host:             "127.0.0.1:3005/api/v1",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "CRUD Fiber",

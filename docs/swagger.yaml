@@ -1,13 +1,29 @@
 basePath: /
 definitions:
-  main.Account:
+  handlers.Account:
     properties:
       id:
         type: string
     type: object
-  main.HTTPError:
+  handlers.HTTPError:
     type: object
-host: 127.0.0.1:3005
+  serializers.User:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 4
+        type: string
+      username:
+        maxLength: 20
+        minLength: 1
+        type: string
+    required:
+    - email
+    - password
+    - username
+    type: object
+host: 127.0.0.1:3005/api/v1
 info:
   contact:
     email: fiber@swagger.io
@@ -38,18 +54,36 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/main.Account'
+            $ref: '#/definitions/handlers.Account'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/main.HTTPError'
+            $ref: '#/definitions/handlers.HTTPError'
         "404":
           description: Not Found
           schema:
-            $ref: '#/definitions/main.HTTPError'
+            $ref: '#/definitions/handlers.HTTPError'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/main.HTTPError'
+            $ref: '#/definitions/handlers.HTTPError'
       summary: Show a account
+  /user/create:
+    post:
+      consumes:
+      - application/json
+      description: create a account
+      parameters:
+      - description: User
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/serializers.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: create a account
 swagger: "2.0"
