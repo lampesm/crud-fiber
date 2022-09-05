@@ -24,7 +24,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/accounts/{id}": {
+        "/account/{id}": {
             "get": {
                 "description": "get string by ID",
                 "consumes": [
@@ -37,8 +37,8 @@ const docTemplate = `{
                 "operationId": "get-string-by-int",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Account ID",
+                        "type": "string",
+                        "description": "User.ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -46,28 +46,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.Account"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.HTTPError"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.HTTPError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.HTTPError"
-                        }
+                        "description": ""
                     }
                 }
             }
@@ -102,17 +81,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "handlers.Account": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                }
-            }
-        },
-        "handlers.HTTPError": {
-            "type": "object"
-        },
         "serializers.User": {
             "type": "object",
             "required": [

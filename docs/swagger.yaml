@@ -1,12 +1,5 @@
 basePath: /
 definitions:
-  handlers.Account:
-    properties:
-      id:
-        type: string
-    type: object
-  handlers.HTTPError:
-    type: object
   serializers.User:
     properties:
       email:
@@ -36,37 +29,23 @@ info:
   title: CRUD Fiber
   version: "1.0"
 paths:
-  /accounts/{id}:
+  /account/{id}:
     get:
       consumes:
       - application/json
       description: get string by ID
       operationId: get-string-by-int
       parameters:
-      - description: Account ID
+      - description: User.ID
         in: path
         name: id
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
         "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handlers.Account'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/handlers.HTTPError'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/handlers.HTTPError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handlers.HTTPError'
+          description: ""
       summary: Show a account
   /user/create:
     post:

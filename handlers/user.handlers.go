@@ -12,25 +12,34 @@ import (
 // @ID get-string-by-int
 // @Accept  json
 // @Produce  json
-// @Param id path int true "Account ID"
-// @Success 200 {object} Account
-// @Failure 400 {object} HTTPError
-// @Failure 404 {object} HTTPError
-// @Failure 500 {object} HTTPError
-// @Router /accounts/{id} [get]
+// @Param id path string true "User.ID"
+// @Success 200
+// @Router /account/{id} [get]
 func ShowAccount(c *fiber.Ctx) error {
-	return c.JSON(Account{
-		Id: c.Params("id"),
-	})
+	posDB := db.Connection()
+	defer db.Close(posDB)
+
+	var result Result
+	posDB.Table("users").Select("id", "username", "password", "email").Where("id = ?", c.Params("id")).Scan(&result)
+
+	if result.ID != 0 {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"error":   false,
+			"content": result,
+		})
+	} else {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"error":   false,
+			"content": "user not found",
+		})
+	}
 }
 
-type Account struct {
-	Id string
-}
-
-type HTTPError struct {
-	status  string
-	message string
+type Result struct {
+	ID       int
+	Username string
+	Password string
+	Email    string
 }
 
 // CreateUser godoc
@@ -43,19 +52,19 @@ type HTTPError struct {
 // @Router /user/create [post]
 func CreateUser(c *fiber.Ctx) error {
 	payload := new(serializers.User)
+
 	err := c.BodyParser(payload)
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": true,
 			"msg":   err.Error(),
 		})
-
 	}
 
 	posDB := db.Connection()
 	defer db.Close(posDB)
-	errDB := posDB.Create(&payload)
 
+	errDB := posDB.Create(&payload)
 	if errDB.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": true,
