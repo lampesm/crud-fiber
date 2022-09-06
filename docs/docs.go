@@ -24,7 +24,35 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/account/{id}": {
+        "/account/create": {
+            "post": {
+                "description": "create a account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "create a account",
+                "parameters": [
+                    {
+                        "description": "User",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/serializers.User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/account/read/{id}": {
             "get": {
                 "description": "get string by ID",
                 "consumes": [
@@ -51,16 +79,16 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/create": {
-            "post": {
-                "description": "create a account",
+        "/account/update/{id}": {
+            "put": {
+                "description": "update a account",
                 "consumes": [
                     "application/json"
                 ],
                 "produces": [
                     "application/json"
                 ],
-                "summary": "create a account",
+                "summary": "update a account",
                 "parameters": [
                     {
                         "description": "User",
@@ -70,6 +98,13 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/serializers.User"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "User.ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {

@@ -25,8 +25,9 @@ func main() {
 
 	api_v1 := app.Group("/api/v1")
 
-	api_v1.Get("/account/:id", handlers.ShowAccount)
-	api_v1.Post("/user/create", handlers.CreateUser)
+	api_v1.Get("/account/read/:id", handlers.ShowAccount)
+	api_v1.Post("/account/create", handlers.CreateAcount)
+	api_v1.Put("/account/update/:id", handlers.UpdateAcount)
 
 	app.Listen(":3005")
 }

@@ -29,25 +29,7 @@ info:
   title: CRUD Fiber
   version: "1.0"
 paths:
-  /account/{id}:
-    get:
-      consumes:
-      - application/json
-      description: get string by ID
-      operationId: get-string-by-int
-      parameters:
-      - description: User.ID
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: ""
-      summary: Show a account
-  /user/create:
+  /account/create:
     post:
       consumes:
       - application/json
@@ -65,4 +47,45 @@ paths:
         "200":
           description: ""
       summary: create a account
+  /account/read/{id}:
+    get:
+      consumes:
+      - application/json
+      description: get string by ID
+      operationId: get-string-by-int
+      parameters:
+      - description: User.ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: Show a account
+  /account/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: update a account
+      parameters:
+      - description: User
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/serializers.User'
+      - description: User.ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: update a account
 swagger: "2.0"

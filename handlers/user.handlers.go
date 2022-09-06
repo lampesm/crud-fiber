@@ -14,7 +14,7 @@ import (
 // @Produce  json
 // @Param id path string true "User.ID"
 // @Success 200
-// @Router /account/{id} [get]
+// @Router /account/read/{id} [get]
 func ShowAccount(c *fiber.Ctx) error {
 	posDB := db.Connection()
 	defer db.Close(posDB)
@@ -49,8 +49,8 @@ type Result struct {
 // @Produce  json
 // @Param payload body serializers.User true "User"
 // @Success 200
-// @Router /user/create [post]
-func CreateUser(c *fiber.Ctx) error {
+// @Router /account/create [post]
+func CreateAcount(c *fiber.Ctx) error {
 	payload := new(serializers.User)
 
 	err := c.BodyParser(payload)
@@ -76,4 +76,37 @@ func CreateUser(c *fiber.Ctx) error {
 			"msg":   "inserted",
 		})
 	}
+}
+
+// UpdateUser godoc
+// @Summary update a account
+// @Description update a account
+// @Accept  json
+// @Produce  json
+// @Param payload body serializers.User true "User"
+// @Param id path string true "User.ID"
+// @Success 200
+// @Router /account/update/{id} [put]
+func UpdateAcount(c *fiber.Ctx) error {
+	payload := new(serializers.User)
+
+	err := c.BodyParser(payload)
+	if err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	posDB := db.Connection()
+	defer db.Close(posDB)
+
+	posDB.Table("users").Where("id = ?", c.Params("id")).Updates(map[string]interface{}{
+		"username": payload.Username, "password": payload.Password, "email": payload.Email,
+	})
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"error":   false,
+		"content": "user updated",
+	})
 }
