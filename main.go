@@ -27,7 +27,8 @@ func main() {
 
 	api_v1.Get("/account/read/:id", handlers.ShowAccount)
 	api_v1.Post("/account/create", handlers.CreateAcount)
-	api_v1.Put("/account/update/:id", handlers.UpdateAcount)
+	api_v1.Put("/account/update/:id", handlers.UpdateAccount)
+	api_v1.Delete("/account/delete/:id", handlers.DeleteAccount)
 
 	app.Listen(":3005")
 }

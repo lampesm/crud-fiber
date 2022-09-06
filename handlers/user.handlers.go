@@ -3,6 +3,7 @@ package handlers
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/lampesm/crud-fiber/db"
+	"github.com/lampesm/crud-fiber/entity"
 	"github.com/lampesm/crud-fiber/serializers"
 )
 
@@ -87,7 +88,7 @@ func CreateAcount(c *fiber.Ctx) error {
 // @Param id path string true "User.ID"
 // @Success 200
 // @Router /account/update/{id} [put]
-func UpdateAcount(c *fiber.Ctx) error {
+func UpdateAccount(c *fiber.Ctx) error {
 	payload := new(serializers.User)
 
 	err := c.BodyParser(payload)
@@ -108,5 +109,27 @@ func UpdateAcount(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"error":   false,
 		"content": "user updated",
+	})
+}
+
+
+// DeleteUser godoc
+// @Summary delete a account
+// @Description delete a account
+// @Accept  json
+// @Produce  json
+// @Param id path string true "User.ID"
+// @Success 200
+// @Router /account/delete/{id} [delete]
+func DeleteAccount(c *fiber.Ctx) error {
+	var users []entity.User
+	posDB := db.Connection()
+	defer db.Close(posDB)
+
+	posDB.Where("id = ?", c.Params("id")).Delete(&users)
+	
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"error":   false,
+		"content": "user deleted",
 	})
 }

@@ -52,6 +52,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/account/delete/{id}": {
+            "delete": {
+                "description": "delete a account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "delete a account",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User.ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/account/read/{id}": {
             "get": {
                 "description": "get string by ID",
