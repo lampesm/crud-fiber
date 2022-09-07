@@ -132,10 +132,14 @@ func DeleteAccount(c *fiber.Ctx) error {
 	posDB := db.Connection()
 	defer db.Close(posDB)
 
-	posDB.Where("id = ?", c.Params("id")).Delete(&users)
+	result := posDB.Where("id = ?", c.Params("id")).Delete(&users)
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"error":   false,
-		"content": "user deleted",
-	})
+	if result.RowsAffected == 1 {
+		return c.Status(fiber.StatusNoContent).Send(nil)
+	} else {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"content": "user not found",
+		})
+	}
+
 }
