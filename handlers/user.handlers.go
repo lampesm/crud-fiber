@@ -102,16 +102,22 @@ func UpdateAccount(c *fiber.Ctx) error {
 	posDB := db.Connection()
 	defer db.Close(posDB)
 
-	posDB.Table("users").Where("id = ?", c.Params("id")).Updates(map[string]interface{}{
+	result := posDB.Table("users").Where("id = ?", c.Params("id")).Updates(map[string]interface{}{
 		"username": payload.Username, "password": payload.Password, "email": payload.Email,
 	})
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{
-		"error":   false,
-		"content": "user updated",
-	})
+	if result.RowsAffected == 1 {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"error":   false,
+			"content": "user updated",
+		})
+	} else {
+		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+			"error":   false,
+			"content": "user not found",
+		})
+	}
 }
-
 
 // DeleteUser godoc
 // @Summary delete a account
@@ -127,7 +133,7 @@ func DeleteAccount(c *fiber.Ctx) error {
 	defer db.Close(posDB)
 
 	posDB.Where("id = ?", c.Params("id")).Delete(&users)
-	
+
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{
 		"error":   false,
 		"content": "user deleted",
