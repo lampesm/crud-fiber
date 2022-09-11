@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"fmt"
+	"net/mail"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/lampesm/crud-fiber/db"
 	"github.com/lampesm/crud-fiber/entity"
@@ -26,12 +29,12 @@ func ShowAccount(c *fiber.Ctx) error {
 	if result.ID != 0 {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
 			"error":   false,
-			"content": result,
+			"msg": result,
 		})
 	} else {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error":   false,
-			"content": "user not found",
+			"msg": "user not found",
 		})
 	}
 }
@@ -56,7 +59,7 @@ func CreateAcount(c *fiber.Ctx) error {
 
 	err := c.BodyParser(payload)
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": true,
 			"msg":   err.Error(),
 		})
@@ -72,7 +75,7 @@ func CreateAcount(c *fiber.Ctx) error {
 			"msg":   errDB.Error,
 		})
 	} else {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
 			"error": false,
 			"msg":   "inserted",
 		})
@@ -93,7 +96,7 @@ func UpdateAccount(c *fiber.Ctx) error {
 
 	err := c.BodyParser(payload)
 	if err != nil {
-		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": true,
 			"msg":   err.Error(),
 		})
@@ -102,6 +105,14 @@ func UpdateAccount(c *fiber.Ctx) error {
 	posDB := db.Connection()
 	defer db.Close(posDB)
 
+	_, errEmail := mail.ParseAddress(payload.Email)
+	if errEmail != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error":   true,
+			"msg": "email is not valid",
+		})
+	}
+
 	result := posDB.Table("users").Where("id = ?", c.Params("id")).Updates(map[string]interface{}{
 		"username": payload.Username, "password": payload.Password, "email": payload.Email,
 	})
@@ -109,12 +120,12 @@ func UpdateAccount(c *fiber.Ctx) error {
 	if result.RowsAffected == 1 {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
 			"error":   false,
-			"content": "user updated",
+			"msg": "user updated",
 		})
 	} else {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error":   false,
-			"content": "user not found",
+			"msg": "user not found",
 		})
 	}
 }
@@ -137,8 +148,8 @@ func DeleteAccount(c *fiber.Ctx) error {
 	if result.RowsAffected == 1 {
 		return c.Status(fiber.StatusNoContent).Send(nil)
 	} else {
-		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"content": "user not found",
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"msg": "user not found",
 		})
 	}
 
