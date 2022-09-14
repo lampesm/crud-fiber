@@ -24,7 +24,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/account/create": {
+        "/api/v1/account/create": {
             "post": {
                 "description": "create a account",
                 "consumes": [
@@ -33,7 +33,11 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "account"
+                ],
                 "summary": "create a account",
+                "operationId": "create-account",
                 "parameters": [
                     {
                         "description": "User",
@@ -52,7 +56,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/account/delete/{id}": {
+        "/api/v1/account/delete/{id}": {
             "delete": {
                 "description": "delete a account",
                 "consumes": [
@@ -61,7 +65,11 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "account"
+                ],
                 "summary": "delete a account",
+                "operationId": "delete-account",
                 "parameters": [
                     {
                         "type": "string",
@@ -78,7 +86,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/account/read/{id}": {
+        "/api/v1/account/read/{id}": {
             "get": {
                 "description": "get string by ID",
                 "consumes": [
@@ -87,8 +95,11 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "account"
+                ],
                 "summary": "Show a account",
-                "operationId": "get-string-by-int",
+                "operationId": "Show-account",
                 "parameters": [
                     {
                         "type": "string",
@@ -105,7 +116,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/account/update/{id}": {
+        "/api/v1/account/update/{id}": {
             "put": {
                 "description": "update a account",
                 "consumes": [
@@ -114,7 +125,11 @@ const docTemplate = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "account"
+                ],
                 "summary": "update a account",
+                "operationId": "update-account",
                 "parameters": [
                     {
                         "description": "User",
@@ -139,9 +154,58 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/login": {
+            "post": {
+                "description": "create a JWT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authenticate"
+                ],
+                "summary": "create a JWT",
+                "parameters": [
+                    {
+                        "description": "Login",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/serializers.Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "serializers.Login": {
+            "type": "object",
+            "required": [
+                "pass",
+                "user"
+            ],
+            "properties": {
+                "pass": {
+                    "type": "string",
+                    "minLength": 3
+                },
+                "user": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 1
+                }
+            }
+        },
         "serializers.User": {
             "type": "object",
             "required": [
@@ -170,7 +234,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "127.0.0.1:3005/api/v1",
+	Host:             "127.0.0.1:3005",
 	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "CRUD Fiber",

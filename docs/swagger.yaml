@@ -1,5 +1,18 @@
 basePath: /
 definitions:
+  serializers.Login:
+    properties:
+      pass:
+        minLength: 3
+        type: string
+      user:
+        maxLength: 20
+        minLength: 1
+        type: string
+    required:
+    - pass
+    - user
+    type: object
   serializers.User:
     properties:
       email:
@@ -16,7 +29,7 @@ definitions:
     - password
     - username
     type: object
-host: 127.0.0.1:3005/api/v1
+host: 127.0.0.1:3005
 info:
   contact:
     email: fiber@swagger.io
@@ -29,11 +42,12 @@ info:
   title: CRUD Fiber
   version: "1.0"
 paths:
-  /account/create:
+  /api/v1/account/create:
     post:
       consumes:
       - application/json
       description: create a account
+      operationId: create-account
       parameters:
       - description: User
         in: body
@@ -47,11 +61,14 @@ paths:
         "200":
           description: ""
       summary: create a account
-  /account/delete/{id}:
+      tags:
+      - account
+  /api/v1/account/delete/{id}:
     delete:
       consumes:
       - application/json
       description: delete a account
+      operationId: delete-account
       parameters:
       - description: User.ID
         in: path
@@ -64,12 +81,14 @@ paths:
         "200":
           description: ""
       summary: delete a account
-  /account/read/{id}:
+      tags:
+      - account
+  /api/v1/account/read/{id}:
     get:
       consumes:
       - application/json
       description: get string by ID
-      operationId: get-string-by-int
+      operationId: Show-account
       parameters:
       - description: User.ID
         in: path
@@ -82,11 +101,14 @@ paths:
         "200":
           description: ""
       summary: Show a account
-  /account/update/{id}:
+      tags:
+      - account
+  /api/v1/account/update/{id}:
     put:
       consumes:
       - application/json
       description: update a account
+      operationId: update-account
       parameters:
       - description: User
         in: body
@@ -105,4 +127,26 @@ paths:
         "200":
           description: ""
       summary: update a account
+      tags:
+      - account
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: create a JWT
+      parameters:
+      - description: Login
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/serializers.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: create a JWT
+      tags:
+      - authenticate
 swagger: "2.0"

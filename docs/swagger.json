@@ -14,10 +14,10 @@
         },
         "version": "1.0"
     },
-    "host": "127.0.0.1:3005/api/v1",
+    "host": "127.0.0.1:3005",
     "basePath": "/",
     "paths": {
-        "/account/create": {
+        "/api/v1/account/create": {
             "post": {
                 "description": "create a account",
                 "consumes": [
@@ -26,7 +26,11 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "account"
+                ],
                 "summary": "create a account",
+                "operationId": "create-account",
                 "parameters": [
                     {
                         "description": "User",
@@ -45,7 +49,7 @@
                 }
             }
         },
-        "/account/delete/{id}": {
+        "/api/v1/account/delete/{id}": {
             "delete": {
                 "description": "delete a account",
                 "consumes": [
@@ -54,7 +58,11 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "account"
+                ],
                 "summary": "delete a account",
+                "operationId": "delete-account",
                 "parameters": [
                     {
                         "type": "string",
@@ -71,7 +79,7 @@
                 }
             }
         },
-        "/account/read/{id}": {
+        "/api/v1/account/read/{id}": {
             "get": {
                 "description": "get string by ID",
                 "consumes": [
@@ -80,8 +88,11 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "account"
+                ],
                 "summary": "Show a account",
-                "operationId": "get-string-by-int",
+                "operationId": "Show-account",
                 "parameters": [
                     {
                         "type": "string",
@@ -98,7 +109,7 @@
                 }
             }
         },
-        "/account/update/{id}": {
+        "/api/v1/account/update/{id}": {
             "put": {
                 "description": "update a account",
                 "consumes": [
@@ -107,7 +118,11 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "account"
+                ],
                 "summary": "update a account",
+                "operationId": "update-account",
                 "parameters": [
                     {
                         "description": "User",
@@ -132,9 +147,58 @@
                     }
                 }
             }
+        },
+        "/login": {
+            "post": {
+                "description": "create a JWT",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "authenticate"
+                ],
+                "summary": "create a JWT",
+                "parameters": [
+                    {
+                        "description": "Login",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/serializers.Login"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "serializers.Login": {
+            "type": "object",
+            "required": [
+                "pass",
+                "user"
+            ],
+            "properties": {
+                "pass": {
+                    "type": "string",
+                    "minLength": 3
+                },
+                "user": {
+                    "type": "string",
+                    "maxLength": 20,
+                    "minLength": 1
+                }
+            }
+        },
         "serializers.User": {
             "type": "object",
             "required": [

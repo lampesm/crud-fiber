@@ -1,9 +1,11 @@
 package main
 
 import (
+	"github.com/lampesm/crud-fiber/middleware/jwt"
+
 	swagger "github.com/arsmn/fiber-swagger/v2"
 	"github.com/gofiber/fiber/v2"
-
+	jwtware "github.com/gofiber/jwt/v3"
 	_ "github.com/lampesm/crud-fiber/docs"
 	"github.com/lampesm/crud-fiber/handlers"
 )
@@ -16,14 +18,20 @@ import (
 // @contact.email fiber@swagger.io
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host 127.0.0.1:3005/api/v1
+// @host 127.0.0.1:3005
 // @BasePath /
 func main() {
 	app := fiber.New()
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
+	app.Post("/login", jwt.Login)
+
 	api_v1 := app.Group("/api/v1")
+
+	api_v1.Use(jwtware.New(jwtware.Config{
+		SigningKey: []byte("secret"),
+	}))
 
 	api_v1.Get("/account/read/:id", handlers.ShowAccount)
 	api_v1.Post("/account/create", handlers.CreateAcount)

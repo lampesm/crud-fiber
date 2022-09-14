@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"fmt"
 	"net/mail"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/lampesm/crud-fiber/db"
 	"github.com/lampesm/crud-fiber/entity"
 	"github.com/lampesm/crud-fiber/serializers"
@@ -13,13 +13,18 @@ import (
 // ShowAccount godoc
 // @Summary Show a account
 // @Description get string by ID
-// @ID get-string-by-int
+// @TAGS account
+// @ID Show-account
 // @Accept  json
 // @Produce  json
 // @Param id path string true "User.ID"
 // @Success 200
-// @Router /account/read/{id} [get]
+// @Router /api/v1/account/read/{id} [get]
 func ShowAccount(c *fiber.Ctx) error {
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	_ = claims
+
 	posDB := db.Connection()
 	defer db.Close(posDB)
 
@@ -28,13 +33,13 @@ func ShowAccount(c *fiber.Ctx) error {
 
 	if result.ID != 0 {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"error":   false,
-			"msg": result,
+			"error": false,
+			"msg":   result,
 		})
 	} else {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error":   false,
-			"msg": "user not found",
+			"error": false,
+			"msg":   "user not found",
 		})
 	}
 }
@@ -49,12 +54,18 @@ type Result struct {
 // CreateUser godoc
 // @Summary create a account
 // @Description create a account
+// @TAGS account
+// @ID create-account
 // @Accept  json
 // @Produce  json
 // @Param payload body serializers.User true "User"
 // @Success 200
-// @Router /account/create [post]
+// @Router /api/v1/account/create [post]
 func CreateAcount(c *fiber.Ctx) error {
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	_ = claims
+
 	payload := new(serializers.User)
 
 	err := c.BodyParser(payload)
@@ -72,7 +83,7 @@ func CreateAcount(c *fiber.Ctx) error {
 	if errDB.Error != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": true,
-			"msg":   errDB.Error,
+			"msg":   errDB.Error.Error(),
 		})
 	} else {
 		return c.Status(fiber.StatusCreated).JSON(fiber.Map{
@@ -85,13 +96,19 @@ func CreateAcount(c *fiber.Ctx) error {
 // UpdateUser godoc
 // @Summary update a account
 // @Description update a account
+// @TAGS account
+// @ID update-account
 // @Accept  json
 // @Produce  json
 // @Param payload body serializers.User true "User"
 // @Param id path string true "User.ID"
 // @Success 200
-// @Router /account/update/{id} [put]
+// @Router /api/v1/account/update/{id} [put]
 func UpdateAccount(c *fiber.Ctx) error {
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	_ = claims
+
 	payload := new(serializers.User)
 
 	err := c.BodyParser(payload)
@@ -108,8 +125,8 @@ func UpdateAccount(c *fiber.Ctx) error {
 	_, errEmail := mail.ParseAddress(payload.Email)
 	if errEmail != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error":   true,
-			"msg": "email is not valid",
+			"error": true,
+			"msg":   "email is not valid",
 		})
 	}
 
@@ -119,13 +136,13 @@ func UpdateAccount(c *fiber.Ctx) error {
 
 	if result.RowsAffected == 1 {
 		return c.Status(fiber.StatusOK).JSON(fiber.Map{
-			"error":   false,
-			"msg": "user updated",
+			"error": false,
+			"msg":   "user updated",
 		})
 	} else {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"error":   false,
-			"msg": "user not found",
+			"error": result.Error.Error(),
+			"msg":   "user not found",
 		})
 	}
 }
@@ -133,12 +150,18 @@ func UpdateAccount(c *fiber.Ctx) error {
 // DeleteUser godoc
 // @Summary delete a account
 // @Description delete a account
+// @TAGS account
+// @ID delete-account
 // @Accept  json
 // @Produce  json
 // @Param id path string true "User.ID"
 // @Success 200
-// @Router /account/delete/{id} [delete]
+// @Router /api/v1/account/delete/{id} [delete]
 func DeleteAccount(c *fiber.Ctx) error {
+	user := c.Locals("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	_ = claims
+	
 	var users []entity.User
 	posDB := db.Connection()
 	defer db.Close(posDB)
@@ -152,5 +175,4 @@ func DeleteAccount(c *fiber.Ctx) error {
 			"msg": "user not found",
 		})
 	}
-
 }
